@@ -3,10 +3,13 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import Header from './components/Header.jsx'
+import WeatherProvider from './services/context/weather/weatherProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Header />
-    <App />
+    <WeatherProvider>
+      <Header />
+      <App />
+    </WeatherProvider>
   </StrictMode>,
 )

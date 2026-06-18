@@ -1,17 +1,19 @@
-import react, { useEffect } from 'react';
+import react, { useCallback, useContext, useEffect } from 'react';
 import todayBgSmall from './../assets/images/bg-today-small.svg';
 import todayBgLarge from './../assets/images/bg-today-large.svg'
 import Sunny from './../assets/images/icon-sunny.webp';
 import { useState } from 'react';
+import { WeatherContext } from '../services/context/weather/weatherContext';
 
-function MainInfoBox() {
 
-    const [country, setCountry] = useState();
+function MainInfoBox({ country }) {
 
-    useEffect(()=>{
-        
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.toLocaleString('en-EN', { month: 'short' });
+    const day = String(now.getDate()).padStart(2, '0');
 
-    },[country])
+    const customDate = `${day} ${month} ${year}`;
 
     return (
         <div className='relative w-fit'>
@@ -32,10 +34,10 @@ function MainInfoBox() {
                 {/* Country and date text */}
                 <div className='flex flex-col items-center md:items-start font-DM-Sans'>
                     <div className='font bold text-4xl  md:mt-0'>
-                        {`Country, City`}
+                        {`name`}
                     </div>
                     <div className='text-sm opacity-60'>
-                        {`Day, Month, Year`}
+                        {customDate}
                     </div>
                 </div>
 

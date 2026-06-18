@@ -5,8 +5,10 @@ import Snow from './../assets/images/icon-snow.webp';
 import Rain from './../assets/images/icon-rain.webp';
 import PartlyCloudy from './../assets/images/icon-partly-cloudy.webp';
 import Overcast from './../assets/images/icon-overcast.webp';
+import { WeatherContext } from "../services/context/weather/weatherContext"; 
 
 function Hourlyinfo() {
+    
     return (
 
         <div className='flex w-full h-fit flex-col justify-start items-top rounded-xl border border-[#4b4b66] bg-[#3e3d60] mt-3'>

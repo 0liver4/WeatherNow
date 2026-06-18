@@ -13,8 +13,8 @@ export default async function getCountry(country) {
 
         const data = req.data;
 
-        // Devuelve el primer resultado
-        return data[0];
+        // Devuelve TODO el país
+        return data.results?.[0] ?? null;
 
     } catch (error) {
 

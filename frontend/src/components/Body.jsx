@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import searchIcon from './../assets/images/icon-search.svg'
 import MainInfoBox from "./MainInfoBox";
 import LittleInfoCard from "./LittleInfoCard";
@@ -6,29 +6,16 @@ import DaylyForecastCard from "./DailyForecastCard";
 import HourlyForecast from "./HourlyForecast";
 import getCountry from "../services/API/geoService";
 import { getWeather } from "../services/API/weatherService";
-
+import { WeatherContext } from "../services/context/weather/weatherContext";
 
 function Body() {
 
-    const [country, setCuntry] = useState();
+    const { weather, searchWeather } = useContext(WeatherContext);
+    const [country, setCountry] = useState("");
 
     const handleSearch = async () => {
-
-        const geoData = await getCountry(country);
-
-        if (!geoData) {
-            console.log("País no encontrado");
-            return;
-        }
-
-        console.log("GEO DATA:", geoData);
-
-        // Obtener clima usando lat/lon
-        const weatherData = await getWeather(geoData);
-
-        console.log("WEATHER:", weatherData);
+        await searchWeather(country);
     };
-
 
     return (
 
@@ -41,7 +28,7 @@ function Body() {
 
                     <input
                         value={country}
-                        onChange={(e) => setCuntry(e.target.value)}
+                        onChange={(e) => setCountry(e.target.value)}
                         type="text"
                         className="w-full bg-transparent border-none focus:outline-none"
                         placeholder="Search for a place..." />
@@ -60,14 +47,29 @@ function Body() {
                 {/* LEFT INFO */}
                 <section className="text-white mt-10 mb-10">
                     {/* MAIN INFORMATION CARD */}
-                    <MainInfoBox />
+                    <MainInfoBox country={country} />
 
                     {/* LITTLE CARDS WITH INFO */}
                     <div className="grid grid-cols-2 mt-5 md:flex md:flex-row justify-center gap-x-5 gap-y-5 md:gap-13">
-                        <LittleInfoCard />
-                        <LittleInfoCard />
-                        <LittleInfoCard />
-                        <LittleInfoCard />
+                        <LittleInfoCard
+                            title="Humidity"
+                            info={weather?.current?.relative_humidity_2m ? weather?.current?.relative_humidity_2m + "°" : ""}
+                        />
+
+                        <LittleInfoCard
+                            title="Wind"
+                            info={weather?.current?.wind_speed_10m ? weather?.current?.wind_speed_10m + "%" : ""}
+                        />
+
+                        <LittleInfoCard
+                            title="Temperature"
+                            info={weather?.current?.temperature_2m ? weather?.current?.temperature_2m + "km/h" : ""}
+                        />
+
+                        <LittleInfoCard
+                            title="Precipitation"
+                            info={weather?.current?.precipitation ? weather.current.precipitation + " mm" : ""}
+                        />
                     </div>
 
                     {/* DAILY FORECAST INFORMATION CARDS */}
@@ -79,13 +81,11 @@ function Body() {
                         </p>
                         {/* DAYLY FORECAST INFORMATION */}
                         <div className="grid grid-cols-3 md:flex md:flex-row gap-3">
-                            <DaylyForecastCard />
-                            <DaylyForecastCard />
-                            <DaylyForecastCard />
-                            <DaylyForecastCard />
-                            <DaylyForecastCard />
-                            <DaylyForecastCard />
-                            <DaylyForecastCard />
+                            <DaylyForecastCard
+                                Day="Sunday" /
+
+                            >
+
                         </div>
                     </section>
                 </section>
