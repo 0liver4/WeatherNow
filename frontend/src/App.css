@@ -1,0 +1,45 @@
+@import "tailwindcss";
+@tailwind utilities;
+
+/*Para añadir un font personalizado se añade primero un font-face junto a sus propiedades,
+luego se agrega al @theme, donde lo primero es el nombre con el que aparece la clase
+*/
+
+@theme {
+    /* Esto crea la clase 'font-display' */
+    --font-BricolageGrotesque: 'Bricolage Grotesque', sans-serif;
+    --font-BricolageGrotesque-Bold: 'Bricolage Grotesque Bold', sans-serif;
+
+    --font-DM-Sans: 'DM Sans', sans-serif;
+    --font-DM-Sans-Italic: 'DM Sans Italic', sans-serif;
+
+}
+
+@font-face {
+    font-family: 'Bricolage Grotesque';
+    src: url('./assets/fonts/Bricolage_Grotesque/BricolageGrotesque-VariableFont_opsz.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Bricolage Grotesque Bold';
+    src: url('./assets/fonts/Bricolage_Grotesque/static/BricolageGrotesque-Bold.ttf') format('truetype');
+    font-weight: 400;
+    font-style: bold;
+}
+
+@font-face {
+    font-family: 'DM Sans';
+    src: url('./assets/fonts/DM_Sans/DMSans-VariableFont_opsz\,wght.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DM Sans Italic';
+    src: url('./assets/fonts/DM_Sans/DMSans-Italic-VariableFont_opsz\,wght.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+
+}
