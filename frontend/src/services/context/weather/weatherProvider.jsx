@@ -8,6 +8,7 @@ export default function WeatherProvider({ children }) {
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [countryName, setCountryName] = useState("");
 
     const searchWeather = async (countryName) => {
 
@@ -15,16 +16,17 @@ export default function WeatherProvider({ children }) {
             setLoading(true);
             setError(null);
 
-            // Obtener coordenadas
+            // Obtain coordinates
             const geoData = await getCountry(countryName);
 
             if (!geoData) {
                 setError("Country not found");
                 return;
             }
+
+            setCountryName(geoData.name);
             const weatherData = await getWeather(geoData);
             setWeather(weatherData);
-            console.log(weatherData)
 
         } catch (err) {
             console.log(err);
@@ -39,6 +41,7 @@ export default function WeatherProvider({ children }) {
         <WeatherContext.Provider
             value={{
                 weather,
+                countryName,
                 loading,
                 error,
                 searchWeather

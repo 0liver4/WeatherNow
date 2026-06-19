@@ -5,15 +5,9 @@ import Sunny from './../assets/images/icon-sunny.webp';
 import { useState } from 'react';
 import { WeatherContext } from '../services/context/weather/weatherContext';
 
+function MainInfoBox({ searchedCountry, currentTemp }) {
 
-function MainInfoBox({ country }) {
-
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.toLocaleString('en-EN', { month: 'short' });
-    const day = String(now.getDate()).padStart(2, '0');
-
-    const customDate = `${day} ${month} ${year}`;
+    const { weather, searchWeather, countryName } = useContext(WeatherContext);
 
     return (
         <div className='relative w-fit'>
@@ -34,18 +28,20 @@ function MainInfoBox({ country }) {
                 {/* Country and date text */}
                 <div className='flex flex-col items-center md:items-start font-DM-Sans'>
                     <div className='font bold text-4xl  md:mt-0'>
-                        {`name`}
+                        {!weather ? "" : countryName}
                     </div>
                     <div className='text-sm opacity-60'>
-                        {customDate}
+                        {weather?.current?.fixedDate}
                     </div>
                 </div>
 
                 {/* Temperature */}
                 <div className='flex flex-row justify-center items-center font-DM-sans mt-10 md:mt-0'>
-                    <img src={Sunny} alt="Sunny" className='w-30 h-30' />
+                    <div className='w-30 h-30'>
+                        {currentTemp && <img src={Sunny} className='w-full h-full border-0' alt="" />}
+                    </div>
                     <div className='font-DM-Sans-Italic text-8xl'>
-                        {`35°`}
+                        {!currentTemp ? "" : currentTemp + `°`}
                     </div>
                 </div>
             </div>

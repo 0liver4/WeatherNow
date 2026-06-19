@@ -19,7 +19,7 @@ function LittleInfoCard({
 
                 {/* INFO */}
                 <div className='font-extralight text-3xl mt-6'>
-                    {info}
+                    {!info ? "-" : info}
                 </div>
 
             </div>

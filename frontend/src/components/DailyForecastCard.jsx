@@ -1,18 +1,12 @@
 import React, { useContext } from "react";
 import Sunny from './../assets/images/icon-sunny.webp';
-import Storm from './../assets/images/icon-storm.webp'
-import Snow from './../assets/images/icon-snow.webp'
-import Rain from './../assets/images/icon-rain.webp'
-import PartlyCloudy from './../assets/images/icon-partly-cloudy.webp'
-import Overcast from './../assets/images/icon-overcast.webp'
 import { WeatherContext } from "../services/context/weather/weatherContext";
+import { weatherIcons } from "../utils/weatherIcons";
 
-function DaylyForecastCard({Day, From, To, Icon}) {
+function DaylyForecastCard({Day, maxTemp, minTemp, weatherCode}) {
 
     const { weather } = useContext(WeatherContext);
-
-    
-
+    const icon = weatherIcons[weatherCode] || "";
 
     return (
         <div>
@@ -26,16 +20,18 @@ function DaylyForecastCard({Day, From, To, Icon}) {
 
                     {/* ICON */}
                     <div className="flex justify-center">
-                        <img src={Icon} alt="" className="w-15 mt-4" />
+                        {
+                            icon ? <img src={icon} alt="icon" className="w-15 mt-4" /> : ""
+                        }
                     </div>
 
                     {/* TEMPERATURE */}
-                    <div className="flex justify-between px-3 mt-3">
+                    <div className="flex justify-between text-sm px-3 mt-3">
                         <div className="font-extralight">
-                            {From}
+                            {!maxTemp ? "" : maxTemp + "°"}
                         </div>
-                        <div className="font-extralight opacity-80">
-                            {To}
+                        <div className="font-extralight text-sm opacity-80">
+                            {!minTemp ? "" : minTemp + "°"}
                         </div>
 
                     </div>
@@ -47,3 +43,5 @@ function DaylyForecastCard({Day, From, To, Icon}) {
 }
 
 export default DaylyForecastCard;
+
+
