@@ -1,8 +1,60 @@
-import React from 'react'
-import DaysMenu from "./DaysMenu"
-import HourlyInfo from "./HourlyInfo"
+/*
+HourlyForecast.jsx
+- Renders the hourly forecast list and provides a day selector (`DaysMenu`).
+- Filters hourly entries by the selected day using the `hourlyTime` timestamps.
+- Expects `hours`, `hourlyTemp`, `weatherCode`, `hourlyTime` and `dailyDays` props
+provided by the parent `Body` component.
+*/
+import { useEffect, useMemo, useState } from 'react';
+import DaysMenu from "./DaysMenu";
+import HourlyInfo from "./HourlyInfo";
 
-function HourlyForecast({ hours, hourlyTemp, weatherCode }) {
+const dayNames = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+];
+
+function HourlyForecast({ hours, hourlyTemp, weatherCode, hourlyTime, dailyDays }) {
+    const availableDays = dailyDays && dailyDays.length > 0 ? dailyDays : ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    const [selectedDay, setSelectedDay] = useState(availableDays[0]);
+
+    useEffect(() => {
+        if (availableDays.length > 0) {
+            setSelectedDay(availableDays[0]);
+        }
+    }, [availableDays.join(",")]);
+
+    const filteredIndexes = useMemo(() => {
+        if (!hourlyTime || !selectedDay) return [];
+
+        return hourlyTime
+            .map((time, index) => {
+                const date = new Date(time);
+                const dayName = dayNames[date.getDay()];
+                return { index, dayName };
+            })
+            .filter((item) => item.dayName === selectedDay)
+            .map((item) => item.index);
+    }, [hourlyTime, selectedDay]);
+
+    const displayedRows = useMemo(() => {
+        if (!hours || filteredIndexes.length === 0) {
+            return Array.from({ length: 8 }).map((_, index) => ({ key: index }));
+        }
+
+        return filteredIndexes.map((index) => ({
+            key: index,
+            hour: hours[index],
+            temp: hourlyTemp?.[index],
+            code: weatherCode?.[index],
+        }));
+    }, [hours, hourlyTemp, weatherCode, filteredIndexes]);
+
     return (
         <div className='flex w-fit h-fit pb-7 px-7 flex-col justify-between items-top rounded-2xl border border-[#3a3a5e] bg-[#25253f] md:mt-6'>
             {/* DAY SELECTOR */}
@@ -11,27 +63,24 @@ function HourlyForecast({ hours, hourlyTemp, weatherCode }) {
                     Hourly forecast
                 </p>
                 <div className='flex justify-end'>
-                    <DaysMenu />
+                    <DaysMenu
+                        days={availableDays}
+                        selectedDay={selectedDay}
+                        onChange={setSelectedDay}
+                    />
                 </div>
             </div>
 
             {/* INFORMATION */}
             <div className='flex flex-col gap-2 mt-3 max-h-150 overflow-y-auto pr-2'>
-                {
-                    !hours ?
-                        Array.from({ length: 8 }).map((_, index) => (
-                            <HourlyInfo key={index} />
-                        ))
-
-                        : hours.slice(0, 24).map((hour, index) => (
-                            <HourlyInfo
-                                key={index}
-                                hours={hour}
-                                hourlyTemp={hourlyTemp[index]}
-                                weatherCode={weatherCode[index]}
-                            />
-                        ))
-                }
+                {displayedRows.map((row) => (
+                    <HourlyInfo
+                        key={row.key}
+                        hours={row.hour}
+                        hourlyTemp={row.temp}
+                        weatherCode={row.code}
+                    />
+                ))}
             </div>
         </div>
     );

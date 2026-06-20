@@ -1,3 +1,9 @@
+/*
+  LittleInfoCard.jsx
+  - Small reusable card used in the body to show a single metric
+    (e.g., 'Feels like', 'Humidity', 'Wind', 'Precipitation').
+  - Receives `title` and `info` as props and renders them.
+*/
 import React from 'react'
 
 function LittleInfoCard({
@@ -17,7 +23,7 @@ function LittleInfoCard({
                     {title}
                 </div>
 
-                {/* INFO */}
+                {/* INFO: if info is empty show a placeholder */}
                 <div className='font-extralight text-3xl mt-6'>
                     {!info ? "-" : info}
                 </div>

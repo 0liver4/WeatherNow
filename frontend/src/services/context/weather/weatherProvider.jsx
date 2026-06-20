@@ -3,35 +3,70 @@ import { WeatherContext } from "./weatherContext";
 import getCountry from "../../API/geoService";
 import { getWeather } from "../../API/weatherService";
 
+const metricUnits = {
+    wind_speed_unit: "ms",
+    temperature_unit: "celsius",
+    precipitation_unit: "mm",
+    system: "metric",
+};
+
+const imperialUnits = {
+    wind_speed_unit: "mph",
+    temperature_unit: "fahrenheit",
+    precipitation_unit: "inch",
+    system: "imperial",
+};
+
 export default function WeatherProvider({ children }) {
 
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [countryName, setCountryName] = useState("");
+    const [geoData, setGeoData] = useState(null);
+    const [units, setUnits] = useState(metricUnits);
 
     const searchWeather = async (countryName) => {
-
         try {
             setLoading(true);
             setError(null);
 
-            // Obtain coordinates
-            const geoData = await getCountry(countryName);
+            // Obtain coordinates from geocoding API
+            const geoInfo = await getCountry(countryName);
 
-            if (!geoData) {
+            if (!geoInfo) {
                 setError("Country not found");
                 return;
             }
 
-            setCountryName(geoData.name);
-            const weatherData = await getWeather(geoData);
+            setCountryName(geoInfo.name);
+            setGeoData(geoInfo);
+            const weatherData = await getWeather(geoInfo, units);
             setWeather(weatherData);
 
         } catch (err) {
             console.log(err);
             setError("Error fetching weather");
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    const updateUnits = async (newUnits) => {
+        setUnits(newUnits);
+
+        if (!geoData) {
+            return;
+        }
+
+        try {
+            setLoading(true);
+            setError(null);
+            const weatherData = await getWeather(geoData, newUnits);
+            setWeather(weatherData);
+        } catch (err) {
+            console.log(err);
+            setError("Error updating units");
         } finally {
             setLoading(false);
         }
@@ -44,7 +79,11 @@ export default function WeatherProvider({ children }) {
                 countryName,
                 loading,
                 error,
-                searchWeather
+                units,
+                searchWeather,
+                updateUnits,
+                metricUnits,
+                imperialUnits,
             }}
         >
             {children}

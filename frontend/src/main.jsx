@@ -1,3 +1,10 @@
+/*
+  main.jsx
+  - Application entry point. Mounts the React tree into `#root`.
+  - Wraps the app in `WeatherProvider` to provide weather + units context
+    to the entire component tree. Renders `Header` and `App` as children.
+*/
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'

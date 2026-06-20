@@ -1,7 +1,11 @@
 import { weatherApi } from "../axios/axiosInstance";
-import getCountry from "./geoService";
 
-export const getWeather = async (country) => {
+// Fetches and transforms raw weather API data into app-friendly shape.
+export const getWeather = async (country, units = {
+    wind_speed_unit: "ms",
+    temperature_unit: "celsius",
+    precipitation_unit: "mm",
+}) => {
 
     const daysNames = [
         "Sunday",
@@ -45,7 +49,9 @@ export const getWeather = async (country) => {
                     "weather_code"
                 ].join(","),
 
-                temperature_unit: "celsius"
+                temperature_unit: units.temperature_unit,
+                wind_speed_unit: units.wind_speed_unit,
+                precipitation_unit: units.precipitation_unit,
             }
         });
 

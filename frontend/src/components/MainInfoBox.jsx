@@ -1,13 +1,20 @@
-import react, { useCallback, useContext, useEffect } from 'react';
+/*
+    MainInfoBox.jsx
+    - Shows the large summary card for today's weather: location, date, and
+        the current temperature icon/value.
+    - Reads `weather` and `countryName` from `WeatherContext`.
+*/
+import { useContext } from 'react';
 import todayBgSmall from './../assets/images/bg-today-small.svg';
 import todayBgLarge from './../assets/images/bg-today-large.svg'
 import Sunny from './../assets/images/icon-sunny.webp';
-import { useState } from 'react';
 import { WeatherContext } from '../services/context/weather/weatherContext';
 
-function MainInfoBox({ searchedCountry, currentTemp }) {
+// MainInfoBox displays current location, date and temperature information.
+function MainInfoBox({ currentTemp }) {
 
-    const { weather, searchWeather, countryName } = useContext(WeatherContext);
+        // read weather and country name from context to display location and date
+        const { weather, countryName } = useContext(WeatherContext);
 
     return (
         <div className='relative w-fit'>
@@ -15,7 +22,7 @@ function MainInfoBox({ searchedCountry, currentTemp }) {
             <img
                 src={todayBgSmall}
                 alt="today's bg"
-                className='block md:hidden objetc-cover'
+                className='block md:hidden object-cover'
             />
 
             <img

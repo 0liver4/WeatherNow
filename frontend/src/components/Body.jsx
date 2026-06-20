@@ -1,19 +1,28 @@
-import React, { useContext, useState, useRef, useEffect } from "react";
+
+/*
+Body.jsx
+- Main content area: contains the search bar, current weather summary
+(`MainInfoBox`), quick info cards, daily forecast tiles and hourly forecast.
+- Uses `WeatherContext` to trigger searches and read `weather` data.
+- Implements an input with debounced suggestions using `getCountrySuggestions`.
+*/
+
+import { useContext, useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import searchIcon from './../assets/images/icon-search.svg'
+
+// Body contains search input, suggestions, and weather information panels.
 import MainInfoBox from "./MainInfoBox";
 import LittleInfoCard from "./LittleInfoCard";
 import DaylyForecastCard from "./DailyForecastCard";
 import HourlyForecast from "./HourlyForecast";
 import { getCountrySuggestions } from "../services/API/geoService";
-import { getWeather } from "../services/API/weatherService";
 import { WeatherContext } from "../services/context/weather/weatherContext";
 
 function Body() {
 
     const { weather, searchWeather } = useContext(WeatherContext);
     const [search, setSearch] = useState("");
-    const [searchedCountry, setSearchedCountry] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [open, setOpen] = useState(false);
     const inputWrapperRef = useRef(null);
@@ -21,7 +30,6 @@ function Body() {
 
     const handleSearch = async (term = search) => {
         setOpen(false);
-        setSearchedCountry(term);
         await searchWeather(term);
     };
 
@@ -105,11 +113,12 @@ function Body() {
             {/* INFO */}
             <div className="flex flex-col md:flex-row gap-3 md:gap-10">
                 <section className="text-white mt-10 mb-10">
-                    <MainInfoBox searchedCountry={searchedCountry} currentTemp={weather?.current?.temperature_2m} />
+                    <MainInfoBox currentTemp={weather?.current?.temperature_2m} />
 
                     <div className="grid grid-cols-2 mt-5 md:flex md:flex-row justify-center gap-x-5 gap-y-5 md:gap-13">
                         <LittleInfoCard
                             title="Feels like"
+
                             info={!weather?.current?.temperature_2m ? "" : weather?.current?.apparent_temperature + "°"}
                         />
                         <LittleInfoCard
@@ -155,6 +164,8 @@ function Body() {
                         hours={weather?.hourly?.hours}
                         hourlyTemp={weather?.hourly?.temperature_2m}
                         weatherCode={weather?.hourly?.weather_code}
+                        hourlyTime={weather?.hourly?.time}
+                        dailyDays={weather?.daily?.days}
                     />
                 </section>
             </div>

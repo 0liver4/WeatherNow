@@ -1,7 +1,14 @@
-import { useState } from 'react'
+/*
+  App.jsx
+  - Top-level app layout component.
+  - Renders the page title and the main `Body` component that contains
+    the search, current weather and forecast UI.
+  - This file only defines the visual shell and should remain small.
+*/
 import './App.css'
 import Body from './components/Body'
 
+// App renders the page title and the main Body component.
 function App() {
 
   return (

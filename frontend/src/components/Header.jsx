@@ -1,3 +1,10 @@
+/*
+  Header.jsx
+  - Top bar component that shows the app logo and the `UnitsMenu`.
+  - `UnitsMenu` is responsible for toggling between metric and imperial units
+    and is mounted here so its dropdown can be positioned relative to header.
+*/
+
 import Logo from '../assets/images/logo.svg'
 import UnitsMenu from './UnitsMenu'
 
