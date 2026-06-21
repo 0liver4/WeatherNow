@@ -8,26 +8,10 @@ provided by the parent `Body` component.
 import { useEffect, useMemo, useState } from 'react';
 import DaysMenu from "./DaysMenu";
 import HourlyInfo from "./HourlyInfo";
-
-const dayNames = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-];
+import dayNames from "../utils/dayNames"
 
 function HourlyForecast({ hours, hourlyTemp, weatherCode, hourlyTime, dailyDays }) {
-    const availableDays = dailyDays && dailyDays.length > 0 ? dailyDays : ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    const [selectedDay, setSelectedDay] = useState(availableDays[0]);
-
-    useEffect(() => {
-        if (availableDays.length > 0) {
-            setSelectedDay(availableDays[0]);
-        }
-    }, [availableDays.join(",")]);
+    const [selectedDay, setSelectedDay] = useState(dayNames[0]);
 
     const filteredIndexes = useMemo(() => {
         if (!hourlyTime || !selectedDay) return [];
@@ -64,7 +48,7 @@ function HourlyForecast({ hours, hourlyTemp, weatherCode, hourlyTime, dailyDays 
                 </p>
                 <div className='flex justify-end'>
                     <DaysMenu
-                        days={availableDays}
+                        days={dayNames}
                         selectedDay={selectedDay}
                         onChange={setSelectedDay}
                     />

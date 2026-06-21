@@ -7,14 +7,15 @@
 import { useContext } from 'react';
 import todayBgSmall from './../assets/images/bg-today-small.svg';
 import todayBgLarge from './../assets/images/bg-today-large.svg'
-import Sunny from './../assets/images/icon-sunny.webp';
 import { WeatherContext } from '../services/context/weather/weatherContext';
+import { weatherIcons } from '../utils/weatherIcons';
 
 // MainInfoBox displays current location, date and temperature information.
-function MainInfoBox({ currentTemp }) {
+function MainInfoBox({ currentTemp, weatherCode }) {
 
-        // read weather and country name from context to display location and date
-        const { weather, countryName } = useContext(WeatherContext);
+    // read weather and country name from context to display location and date
+    const { weather, countryName } = useContext(WeatherContext);
+    const icon = weatherIcons[weatherCode] || "";
 
     return (
         <div className='relative w-fit'>
@@ -45,7 +46,7 @@ function MainInfoBox({ currentTemp }) {
                 {/* Temperature */}
                 <div className='flex flex-row justify-center items-center font-DM-sans mt-10 md:mt-0'>
                     <div className='w-30 h-30'>
-                        {currentTemp && <img src={Sunny} className='w-full h-full border-0' alt="" />}
+                        {currentTemp && <img src={icon} className='w-full h-full border-0' alt="" />}
                     </div>
                     <div className='font-DM-Sans-Italic text-8xl'>
                         {!currentTemp ? "" : currentTemp + `°`}

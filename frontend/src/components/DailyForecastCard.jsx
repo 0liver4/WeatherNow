@@ -5,8 +5,8 @@
 */
 import { weatherIcons } from "../utils/weatherIcons";
 
-// DaylyForecastCard renders one daily weather tile with icon and temperatures.
-function DaylyForecastCard({Day, maxTemp, minTemp, weatherCode}) {
+// DailyForecastCard renders one daily weather tile with icon and temperatures.
+function DailyForecastCard({Day, maxTemp, minTemp, weatherCode}) {
 
         // choose an icon based on the numeric weather code; empty string if none
         const icon = weatherIcons[weatherCode] || "";
@@ -46,6 +46,6 @@ function DaylyForecastCard({Day, maxTemp, minTemp, weatherCode}) {
 
 }
 
-export default DaylyForecastCard;
+export default DailyForecastCard;
 
 

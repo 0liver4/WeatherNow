@@ -14,7 +14,7 @@ import searchIcon from './../assets/images/icon-search.svg'
 // Body contains search input, suggestions, and weather information panels.
 import MainInfoBox from "./MainInfoBox";
 import LittleInfoCard from "./LittleInfoCard";
-import DaylyForecastCard from "./DailyForecastCard";
+import DailyForecastCard from "./DailyForecastCard";
 import HourlyForecast from "./HourlyForecast";
 import { getCountrySuggestions } from "../services/API/geoService";
 import { WeatherContext } from "../services/context/weather/weatherContext";
@@ -52,14 +52,15 @@ function Body() {
         }, 400);
     };
 
-    // Solo autocompleta el input, no busca
+    // Just auto complete the input and search
     const handleSelectSuggestion = (place) => {
         const label = place.admin1
             ? `${place.name}, ${place.country}`
             : place.name;
-
+        
         setSearch(label);
         setOpen(false);
+        handleSearch();
     };
 
     const handleKeyDown = (e) => {
@@ -113,7 +114,7 @@ function Body() {
             {/* INFO */}
             <div className="flex flex-col md:flex-row gap-3 md:gap-10">
                 <section className="text-white mt-10 mb-10">
-                    <MainInfoBox currentTemp={weather?.current?.temperature_2m} />
+                    <MainInfoBox currentTemp={weather?.current?.temperature_2m} weatherCode={weather?.current?.weather_code} />
 
                     <div className="grid grid-cols-2 mt-5 md:flex md:flex-row justify-center gap-x-5 gap-y-5 md:gap-13">
                         <LittleInfoCard
@@ -143,10 +144,10 @@ function Body() {
                             {
                                 !weather
                                     ? Array.from({ length: 7 }).map((_, index) => (
-                                        <DaylyForecastCard key={index} />
+                                        <DailyForecastCard key={index} />
                                     ))
                                     : weather?.daily?.days?.slice(0, 7).map((day, index) => (
-                                        <DaylyForecastCard
+                                        <DailyForecastCard
                                             key={index}
                                             Day={day}
                                             maxTemp={weather.daily.temperature_2m_max[index]}

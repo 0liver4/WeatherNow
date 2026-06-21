@@ -1,4 +1,5 @@
 import { weatherApi } from "../axios/axiosInstance";
+import { daysNames } from "../../utils/dayNames";
 
 // Fetches and transforms raw weather API data into app-friendly shape.
 export const getWeather = async (country, units = {
@@ -6,16 +7,6 @@ export const getWeather = async (country, units = {
     temperature_unit: "celsius",
     precipitation_unit: "mm",
 }) => {
-
-    const daysNames = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday"
-    ];
 
     try {
 
@@ -163,8 +154,6 @@ export const getWeather = async (country, units = {
             }
 
         };
-
-        console.log(weatherData);
 
         return weatherData;
 
