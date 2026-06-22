@@ -1,4 +1,3 @@
-
 /*
 Body.jsx
 - Main content area: contains the search bar, current weather summary
@@ -10,6 +9,8 @@ Body.jsx
 import { useContext, useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import searchIcon from './../assets/images/icon-search.svg'
+import errorIcon from './../assets/images/icon-error.svg'
+import retryIcon from './../assets/images/icon-retry.svg'
 
 // Body contains search input, suggestions, and weather information panels.
 import MainInfoBox from "./MainInfoBox";
@@ -21,7 +22,7 @@ import { WeatherContext } from "../services/context/weather/weatherContext";
 
 function Body() {
 
-    const { weather, searchWeather } = useContext(WeatherContext);
+    const { weather, searchWeather, error } = useContext(WeatherContext);
     const [search, setSearch] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [open, setOpen] = useState(false);
@@ -57,7 +58,7 @@ function Body() {
         const label = place.admin1
             ? `${place.name}, ${place.country}`
             : place.name;
-        
+
         setSearch(label);
         setOpen(false);
         handleSearch();
@@ -73,7 +74,7 @@ function Body() {
         return () => {
             if (debounceRef.current) clearTimeout(debounceRef.current);
         };
-    }, []);
+    },[]);
 
     return (
         <div>
@@ -111,65 +112,106 @@ function Body() {
                 </button>
             </div>
 
+
             {/* INFO */}
-            <div className="flex flex-col md:flex-row gap-3 md:gap-10">
-                <section className="text-white mt-10 mb-10">
-                    <MainInfoBox currentTemp={weather?.current?.temperature_2m} weatherCode={weather?.current?.weather_code} />
+            {
+                error == 2 ? (
+                    // ERROR = 2 - NO DATA FROM THE API
 
-                    <div className="grid grid-cols-2 mt-5 md:flex md:flex-row justify-center gap-x-5 gap-y-5 md:gap-13">
-                        <LittleInfoCard
-                            title="Feels like"
-
-                            info={!weather?.current?.temperature_2m ? "" : weather?.current?.apparent_temperature + "°"}
-                        />
-                        <LittleInfoCard
-                            title="Humidity"
-                            info={!weather?.current?.relative_humidity_2m ? "" : weather?.current?.relative_humidity_2m + "%"}
-                        />
-                        <LittleInfoCard
-                            title="Wind"
-                            info={!weather?.current?.wind_speed_10m ? "" : weather?.current?.wind_speed_10m + " km/h"}
-                        />
-                        <LittleInfoCard
-                            title="Precipitation"
-                            info={weather?.current?.precipitation == undefined ? "" : weather?.current?.precipitation + " mm"}
-                        />
-                    </div>
-
-                    <section className="mt-15">
-                        <p className="font-DM-Sans text-xl my-5">
-                            Daily Forecast
-                        </p>
-                        <div className="grid grid-cols-3 md:flex md:flex-row gap-3">
-                            {
-                                !weather
-                                    ? Array.from({ length: 7 }).map((_, index) => (
-                                        <DailyForecastCard key={index} />
-                                    ))
-                                    : weather?.daily?.days?.slice(0, 7).map((day, index) => (
-                                        <DailyForecastCard
-                                            key={index}
-                                            Day={day}
-                                            maxTemp={weather.daily.temperature_2m_max[index]}
-                                            minTemp={weather.daily.temperature_2m_min[index]}
-                                            weatherCode={weather.daily.weather_code[index]}
-                                        />
-                                    ))
-                            }
+                    <div className="flex h-screen flex-col md:flex-row gap-3 md:gap-10">
+                        <div className="flex flex-col w-87 md:w-screen items-center mt-10 md:mt-16 px-1">
+                            <img src={errorIcon} alt="icon" className="w-7 md:w-10" />
+                            <p className="text-white font-BricolageGrotesque pt-8 text-xl md:text-6xl">
+                                Something went wrong
+                            </p>
+                            <p className="text-white opacity-70 pt-5 w-80 md:w-md text-center text-sm sm:text-lg">
+                                We couldn't connect to the server (API error). Please try again in a few moments.
+                            </p>
+                            <div className='flex flex-row justify-center items-center rounded-lg bg-[#25253f] gap-2 px-3 py-2 mt-5'>
+                                <img src={retryIcon} alt="icon" className="w-4 h-4" />
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    type="button"
+                                    className="text-white font-DM-Sans opacity-60">
+                                    Retry
+                                </button>
+                            </div>
                         </div>
-                    </section>
-                </section>
+                    </div>
+                )
+                    : error == 1 ?
+                    //ERRO = 1 - NO COUNTRIES FOUND
+                        (
+                            <div className="flex h-screen flex-col md:flex-row gap-3 md:gap-10">
+                                <div className="flex flex-col w-87 md:w-screen items-center mt-10 md:mt-16 px-1">
+                                    <p className="text-white font-BricolageGrotesque pt-8 text-xl md:text-6xl opacity-80">
+                                        No search result found!
+                                    </p>
+                                </div>
+                            </div>
+                        )
+                        :
+                        (
+                            <div className="flex flex-col md:flex-row gap-3 md:gap-10">
+                                <section className="text-white mt-10 mb-10">
+                                    <MainInfoBox currentTemp={weather?.current?.temperature_2m} weatherCode={weather?.current?.weather_code} />
 
-                <section className="">
-                    <HourlyForecast
-                        hours={weather?.hourly?.hours}
-                        hourlyTemp={weather?.hourly?.temperature_2m}
-                        weatherCode={weather?.hourly?.weather_code}
-                        hourlyTime={weather?.hourly?.time}
-                        dailyDays={weather?.daily?.days}
-                    />
-                </section>
-            </div>
+                                    <div className="grid grid-cols-2 mt-5 md:flex md:flex-row justify-center gap-x-5 gap-y-5 md:gap-13">
+                                        <LittleInfoCard
+                                            title="Feels like"
+
+                                            info={!weather?.current?.temperature_2m ? "" : weather?.current?.apparent_temperature + "°"}
+                                        />
+                                        <LittleInfoCard
+                                            title="Humidity"
+                                            info={!weather?.current?.relative_humidity_2m ? "" : weather?.current?.relative_humidity_2m + "%"}
+                                        />
+                                        <LittleInfoCard
+                                            title="Wind"
+                                            info={!weather?.current?.wind_speed_10m ? "" : weather?.current?.wind_speed_10m + " km/h"}
+                                        />
+                                        <LittleInfoCard
+                                            title="Precipitation"
+                                            info={weather?.current?.precipitation == undefined ? "" : weather?.current?.precipitation + " mm"}
+                                        />
+                                    </div>
+
+                                    <section className="mt-15">
+                                        <p className="font-DM-Sans text-xl my-5">
+                                            Daily Forecast
+                                        </p>
+                                        <div className="grid grid-cols-3 md:flex md:flex-row gap-3">
+                                            {
+                                                !weather
+                                                    ? Array.from({ length: 7 }).map((_, index) => (
+                                                        <DailyForecastCard key={index} />
+                                                    ))
+                                                    : weather?.daily?.days?.slice(0, 7).map((day, index) => (
+                                                        <DailyForecastCard
+                                                            key={index}
+                                                            Day={day}
+                                                            maxTemp={weather.daily.temperature_2m_max[index]}
+                                                            minTemp={weather.daily.temperature_2m_min[index]}
+                                                            weatherCode={weather.daily.weather_code[index]}
+                                                        />
+                                                    ))
+                                            }
+                                        </div>
+                                    </section>
+                                </section>
+
+                                <section className="">
+                                    <HourlyForecast
+                                        hours={weather?.hourly?.hours}
+                                        hourlyTemp={weather?.hourly?.temperature_2m}
+                                        weatherCode={weather?.hourly?.weather_code}
+                                        hourlyTime={weather?.hourly?.time}
+                                        dailyDays={weather?.daily?.days}
+                                    />
+                                </section>
+                            </div>
+                        )
+            }
         </div>
     );
 }

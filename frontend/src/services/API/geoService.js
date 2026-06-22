@@ -7,7 +7,6 @@ export default async function getCountry(country) {
                 name: country,
             }
         });
-
         const data = req.data;
 
         // Return ALL the country
@@ -19,7 +18,6 @@ export default async function getCountry(country) {
     }
 }
 
-// AGREGA ESTO 👇
 export async function getCountrySuggestions(query) {
     if (!query || query.trim().length < 2) return [];
 
@@ -27,7 +25,6 @@ export async function getCountrySuggestions(query) {
         const req = await geoApi.get("", {
             params: {
                 name: query,
-                count: 5,
             }
         });
 
@@ -35,6 +32,5 @@ export async function getCountrySuggestions(query) {
 
     } catch (error) {
         console.log("Error GEO suggestions:", error);
-        return [];
     }
 }

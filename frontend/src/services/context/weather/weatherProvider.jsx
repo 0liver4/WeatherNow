@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { WeatherContext } from "./weatherContext";
 import getCountry from "../../API/geoService";
 import { getWeather } from "../../API/weatherService";
@@ -21,10 +21,16 @@ export default function WeatherProvider({ children }) {
 
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(null); // ERROR = 1 NO COUNTRIES FOUND, ERROR = 2 NO DATA FROM THE API
     const [countryName, setCountryName] = useState("");
     const [geoData, setGeoData] = useState(null);
     const [units, setUnits] = useState(metricUnits);
+
+    useEffect(() => {
+        if (error) {
+            console.log(error);
+        }
+    }, [error]);
 
     const searchWeather = async (countryName) => {
         try {
@@ -35,7 +41,7 @@ export default function WeatherProvider({ children }) {
             const geoInfo = await getCountry(countryName);
 
             if (!geoInfo) {
-                setError("Country not found");
+                setError(1);
                 return;
             }
 
@@ -43,10 +49,9 @@ export default function WeatherProvider({ children }) {
             setGeoData(geoInfo);
             const weatherData = await getWeather(geoInfo, units);
             setWeather(weatherData);
-
         } catch (err) {
             console.log(err);
-            setError("Error fetching weather");
+            setError(2);
         } finally {
             setLoading(false);
         }
