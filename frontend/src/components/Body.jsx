@@ -159,7 +159,6 @@ function Body() {
                                     <div className="grid grid-cols-2 mt-5 md:flex md:flex-row justify-center gap-x-5 gap-y-5 md:gap-13">
                                         <LittleInfoCard
                                             title="Feels like"
-
                                             info={!weather?.current?.temperature_2m ? "" : weather?.current?.apparent_temperature + "°"}
                                         />
                                         <LittleInfoCard

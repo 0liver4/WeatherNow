@@ -2,7 +2,7 @@
 HourlyForecast.jsx
 - Renders the hourly forecast list and provides a day selector (`DaysMenu`).
 - Filters hourly entries by the selected day using the `hourlyTime` timestamps.
-- Expects `hours`, `hourlyTemp`, `weatherCode`, `hourlyTime` and `dailyDays` props
+- Expects `hours`, `hourlyTemp`, `weatherCode` and `hourlyTime` props
 provided by the parent `Body` component.
 */
 import { useEffect, useMemo, useState } from 'react';
@@ -10,18 +10,17 @@ import DaysMenu from "./DaysMenu";
 import HourlyInfo from "./HourlyInfo";
 import dayNames from "../utils/dayNames"
 
-function HourlyForecast({ hours, hourlyTemp, weatherCode, hourlyTime, dailyDays }) {
+function HourlyForecast({ hours, hourlyTemp, weatherCode, hourlyTime }) {
     const [selectedDay, setSelectedDay] = useState(dayNames[0]);
 
     const filteredIndexes = useMemo(() => {
         if (!hourlyTime || !selectedDay) return [];
 
-        return hourlyTime
-            .map((time, index) => {
-                const date = new Date(time);
-                const dayName = dayNames[date.getDay()];
-                return { index, dayName };
-            })
+        return hourlyTime.map((time, index) => {
+            const date = new Date(time);
+            const dayName = dayNames[date.getDay()];
+            return { index, dayName };
+        })
             .filter((item) => item.dayName === selectedDay)
             .map((item) => item.index);
     }, [hourlyTime, selectedDay]);
