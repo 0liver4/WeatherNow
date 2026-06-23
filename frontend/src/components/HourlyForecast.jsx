@@ -27,7 +27,7 @@ function HourlyForecast({ hours, hourlyTemp, weatherCode, hourlyTime }) {
 
     const displayedRows = useMemo(() => {
         if (!hours || filteredIndexes.length === 0) {
-            return Array.from({ length: 8 }).map((_, index) => ({ key: index }));
+            return Array.from({ length: 7 }).map((_, index) => ({ key: index }));
         }
 
         return filteredIndexes.map((index) => ({

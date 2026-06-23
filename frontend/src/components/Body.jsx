@@ -4,6 +4,7 @@ Body.jsx
 (`MainInfoBox`), quick info cards, daily forecast tiles and hourly forecast.
 - Uses `WeatherContext` to trigger searches and read `weather` data.
 - Implements an input with debounced suggestions using `getCountrySuggestions`.
+
 */
 
 import { useContext, useState, useRef, useEffect } from "react";
@@ -46,6 +47,7 @@ function Body() {
             return;
         }
 
+        //SET THE SUGESTIONS EVERY 400ms SO IT DOES'T CALL THE API ON EACH LETTER TYPED
         debounceRef.current = setTimeout(async () => {
             const results = await getCountrySuggestions(value);
             setSuggestions(results);
@@ -53,12 +55,9 @@ function Body() {
         }, 400);
     };
 
-    // Just auto complete the input and search
+    // auto complete the input and search
     const handleSelectSuggestion = (place) => {
-        const label = place.admin1
-            ? `${place.name}, ${place.country}`
-            : place.name;
-
+        const label = place.admin1 ? `${place.name}, ${place.country}` : place.name;
         setSearch(label);
         setOpen(false);
         handleSearch();
@@ -70,11 +69,12 @@ function Body() {
         }
     };
 
+    //CLEANS THE TIMEOUT
     useEffect(() => {
         return () => {
             if (debounceRef.current) clearTimeout(debounceRef.current);
         };
-    },[]);
+    }, []);
 
     return (
         <div>
@@ -140,7 +140,7 @@ function Body() {
                     </div>
                 )
                     : error == 1 ?
-                    //ERRO = 1 - NO COUNTRIES FOUND
+                        //ERRO = 1 - NO COUNTRIES FOUND
                         (
                             <div className="flex h-screen flex-col md:flex-row gap-3 md:gap-10">
                                 <div className="flex flex-col w-87 md:w-screen items-center mt-10 md:mt-16 px-1">

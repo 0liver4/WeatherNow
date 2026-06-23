@@ -24,7 +24,7 @@ function LittleInfoCard({
 
                 {/* INFO: if info is empty show a placeholder */}
                 <div className='font-extralight text-3xl mt-6'>
-                    {!info ? "-" : info}
+                    {!info ? "—" : info}
                 </div>
 
             </div>
